@@ -51,7 +51,6 @@ if (require('fs').existsSync('./config.js')) {
 
 var gulp           = require('gulp'),
     seq            = require('run-sequence'),
-    connect        = require('gulp-connect'),
     less           = require('gulp-less'),
     uglify         = require('gulp-uglify'),
     sourcemaps     = require('gulp-sourcemaps'),
@@ -69,7 +68,8 @@ var gulp           = require('gulp'),
     ngFilesort     = require('gulp-angular-filesort'),
     streamqueue    = require('streamqueue'),
     rename         = require('gulp-rename'),
-    path           = require('path');
+    path           = require('path'),
+    gls            = require('gulp-live-server');
 
 
 /*================================================
@@ -114,6 +114,19 @@ gulp.task('connect', function() {
   }
 });
 
+/*==========================================
+=            Start a web server            =
+==========================================*/
+
+gulp.task('server', function() {
+    var server = gls.new('app.js');
+    server.start();
+ 
+    //use gulp.watch to trigger server actions(notify, start or stop) 
+    gulp.watch(['www/**/*.css', 'www/**/*.html'], server.notify);
+    gulp.watch('app.js', server.start); //restart my server 
+});
+
 
 /*==============================================================
 =            Setup live reloading on source changes            =
@@ -121,7 +134,7 @@ gulp.task('connect', function() {
 
 gulp.task('livereload', function () {
   gulp.src(path.join(config.dest, '*.html'))
-    .pipe(connect.reload());
+    .pipe(gls.notify());
 });
 
 
@@ -270,7 +283,7 @@ gulp.task('default', function(done){
   }
 
   if (typeof config.server === 'object') {
-    tasks.push('connect');
+    tasks.push('server');
   }
 
   tasks.push('watch');

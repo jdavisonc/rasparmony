@@ -1,0 +1,33 @@
+{
+  "repeaters": {
+    "SonyTV": {
+      "VolumeUp": true,
+      "VolumeDown": true
+    }
+  },
+  "macros": {
+    "Play Xbox 360": [
+      [ "SonyTV", "Power" ],
+      [ "SonyTV", "Xbox360" ],
+      [ "Yamaha", "Power" ],
+      [ "Yamaha", "Xbox360" ],
+      [ "Xbox360", "Power" ]
+    ],
+    "Listen to Music": [
+      [ "Yamaha", "Power" ],
+      [ "Yamaha", "AirPlay" ]
+    ]
+  },
+  "commandLabels": {
+    "LircNamespace": {
+      "KEY_POWER": "Power",
+      "KEY_VOLUMEUP": "Vol+",
+      "KEY_VOLUMEDOWN": "Vol-",
+      "KEY_CHANNELUP": "Channel Up",
+      "KEY_CHANNELDOWN": "Channel Down"
+    }
+  },
+  "remoteLabels": {
+    "LircNamespace": "LIRC namespace"
+  }
+}

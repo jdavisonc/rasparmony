@@ -4,7 +4,7 @@ module.exports = function(config) {
   config.dest = 'www';
   
   // Inject cordova script into html
-  config.cordova = true;
+  config.cordova = false;
   
   // Images minification
   config.minify_images = true;
