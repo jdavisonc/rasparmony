@@ -5,7 +5,7 @@ Like Harmony but with a RaspberryPI - [https://medium.com/@jdavisonc/rasparmony-
 
 With Rasparmony you will be able to control all your devices with your smartphone, moreover Rasparmony enables you to run macros! Yes, macros... a set of commands to differents devices. This is, turn on your TV, the Home Theather and set input mode to HDMI1 on the TV.
 
-Rasparmony starts as fork of `lirc_web` with the idea to extend it adding more features in order to be user friendly with a easy setup. 
+Rasparmony starts as fork of `lirc_web` with the idea to extend it. It has a lot of new features in order to be user friendly with a easy setup. 
 
 Rasparmony use:
 
