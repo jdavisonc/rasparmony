@@ -35,8 +35,9 @@ npm app.js
 # to be continue
 ```
 
-### config.json
+## Configuration
 
+config.json
 ```
 {
   "remotes": {
