@@ -1,68 +1,41 @@
 angular.module('Rasparmony.controllers.Main', [])
 
-.controller('MainController', function($scope, $http){
+.controller('MainController', function($scope, $http, $routeParams){
 
-	$scope.config = {
-		macros: [
-			{ 
-				"name": "TV", 
-				"icon": "gamepad",
-				"commands": [ 
-					{ "remote": "TV", "command": "power" }, 
-					{ "remote": "HomeTheater", "command": "power" } 
-				] 
-			},
-			{ 
-				"name": "Nexus Player", 
-				"icon": "youtube-play",
-				"commands": [ 
-					{ "remote": "TV", "command": "input" }, 
-					{ "remote": "TV", "command": "input" }, 
-					{ "remote": "TV", "command": "input" }
-				] 
-			},
-			{ 
-				"name": "Cable",
-				"icon": "code-fork",
-				"commands": [ 
-					{ "remote": "TV", "command": "input" }, 
-					{ "remote": "TV", "command": "input" }, 
-					{ "remote": "TV", "command": "input" }
-				] 
-			},
-			{ 
-				"name": "Radio", 
-				"icon": "headphones",
-				"commands": [ 
-					{ "remote": "HomeTheater", "command": "power" },
-					{ "remote": "HomeTheater", "command": "input" },
-					{ "remote": "HomeTheater", "command": "input" },
-					{ "remote": "HomeTheater", "command": "input" }
-				] 
-			}
-		],
-		remotes: [ 
-			{ "name": "TV", code: "LHV4420" }, 
-			{ "name": "HomeTheater", code: "888888" }
-		]
+	var init = function() {
+		$http.get('/macros')
+			.success(function(data) {
+		    	$scope.macros = data;
+			}).error(function(data, status, headers, config) {
+		    	console.log("Error getting macros");
+			});
+
+		$http.get('/remotes')
+			.success(function(data) {
+		    	$scope.remotes = data;
+			}).error(function(data, status, headers, config) {
+		    	console.log("Error getting remotes");
+			});
 	};
 
-	$scope.send = function (remote, command) {
-		$http.get('/someUrl').
-		  success(function(data, status, headers, config) {
-		    // this callback will be called asynchronously
-		    // when the response is available
-		    console.log("message");
-		  }).
-		  error(function(data, status, headers, config) {
-		    // called asynchronously if an error occurs
-		    // or server returns response with an error status.
-		    console.log("message");
-		  });
+	$scope.send = function (command) {
+		$http.post('/remotes/' + $routeParams.remote + '/' + command)
+			.success(function(data) {
+		    	;
+		  	}).error(function(data, status, headers, config) {
+		    	console.log("Error sending command");
+		    });
 	};
 
-	$scope.sendMacro = function (macro) {
-
+	$scope.execute = function (macro) {
+		$http.post('/macros/' + macro.name)
+			.success(function(data) {
+		    	;
+		  	}).error(function(data, status, headers, config) {
+		    	console.log("Error executing macro");
+		    });
 	};
+
+	init();
   
 });

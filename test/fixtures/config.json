@@ -1,33 +1,86 @@
 {
-  "repeaters": {
-    "SonyTV": {
-      "VolumeUp": true,
-      "VolumeDown": true
+  "remotes": {
+    "TV": {
+      "name": "TV",
+      "code": "LHV4420"
+    },
+    "HomeTheater": {
+      "name": "HomeTheater",
+      "code": "888888"
     }
   },
   "macros": {
-    "Play Xbox 360": [
-      [ "SonyTV", "Power" ],
-      [ "SonyTV", "Xbox360" ],
-      [ "Yamaha", "Power" ],
-      [ "Yamaha", "Xbox360" ],
-      [ "Xbox360", "Power" ]
-    ],
-    "Listen to Music": [
-      [ "Yamaha", "Power" ],
-      [ "Yamaha", "AirPlay" ]
-    ]
-  },
-  "commandLabels": {
-    "LircNamespace": {
-      "KEY_POWER": "Power",
-      "KEY_VOLUMEUP": "Vol+",
-      "KEY_VOLUMEDOWN": "Vol-",
-      "KEY_CHANNELUP": "Channel Up",
-      "KEY_CHANNELDOWN": "Channel Down"
+    "TV": {
+      "name": "TV",
+      "icon": "gamepad",
+      "commands": [
+        {
+          "remote": "TV",
+          "command": "KEY_POWER"
+        },
+        {
+          "remote": "HomeTheater",
+          "command": "KEY_POWER"
+        }
+      ]
+    },
+    "Nexus Player": {
+      "name": "Nexus Player",
+      "icon": "youtube-play",
+      "commands": [
+        {
+          "remote": "TV",
+          "command": "KEY_POWER"
+        },
+        {
+          "remote": "TV",
+          "command": "KEY_INPUT"
+        },
+        {
+          "remote": "TV",
+          "command": "KEY_INPUT"
+        }
+      ]
+    },
+    "Cable": {
+      "name": "Cable",
+      "icon": "code-fork",
+      "commands": [
+        {
+          "remote": "TV",
+          "command": "KEY_INPUT"
+        },
+        {
+          "remote": "TV",
+          "command": "KEY_INPUT"
+        },
+        {
+          "remote": "TV",
+          "command": "KEY_INPUT"
+        }
+      ]
+    },
+    "Radio": {
+      "name": "Radio",
+      "icon": "headphones",
+      "commands": [
+        {
+          "remote": "HomeTheater",
+          "command": "KEY_POWER"
+        },
+        {
+          "remote": "HomeTheater",
+          "command": "KEY_INPUT"
+        },
+        {
+          "remote": "HomeTheater",
+          "command": "KEY_INPUT"
+        },
+        {
+          "remote": "HomeTheater",
+          "command": "KEY_INPUT"
+        }
+      ]
     }
-  },
-  "remoteLabels": {
-    "LircNamespace": "LIRC namespace"
   }
 }

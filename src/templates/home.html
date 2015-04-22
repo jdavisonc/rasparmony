@@ -1,13 +1,10 @@
 <div class="scrollable">  
   <div class="scrollable-content">
     <div class="list-group text-center">
-      <div class="list-group-item list-group-item-home" ng-repeat="macro in config.macros">
-        <div>
-          <i class="fa fa-{{macro.icon}} feature-icon text-primary"></i>
-        </div>
-        <div>
-            <h4 class="home-heading">{{macro.name}}</h4>
-        </div>
+      <div class="list-group-item list-group-item-home" ng-repeat="macro in macros">
+        <a class="btn btn-lg btn-info" style="width: 100%" ng-click="execute(macro)">
+          <i class="fa fa-{{macro.icon}} fa-3x pull-left"></i>{{macro.name}}
+        </a>
       </div>
     </div>
   </div>

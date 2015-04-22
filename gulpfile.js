@@ -21,11 +21,6 @@ var config = {
     ]
   },
 
-  server: {
-    host: '0.0.0.0',
-    port: '8000'
-  },
-
   weinre: {
     httpPort:     8001,
     boundHost:    'localhost',
@@ -94,24 +89,6 @@ gulp.task('clean', function (cb) {
         path.join(config.dest, 'fonts')
       ], { read: false })
      .pipe(rimraf());
-});
-
-
-/*==========================================
-=            Start a web server            =
-==========================================*/
-
-gulp.task('connect', function() {
-  if (typeof config.server === 'object') {
-    connect.server({
-      root: config.dest,
-      host: config.server.host,
-      port: config.server.port,
-      livereload: true
-    });
-  } else {
-    throw new Error('Connect is not configured');
-  }
 });
 
 /*==========================================
