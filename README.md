@@ -1,20 +1,78 @@
 Rasparmony
 ========
 
+Like Harmony but with a RaspberryPI - [https://medium.com/@jdavisonc/rasparmony-857ac725aa64]
+
+With Rasparmony you will be able to control all your devices with your smartphone, moreover Rasparmony enables you to run macros! Yes, macros... a set of commands to differents devices. This is, turn on your TV, the Home Theather and set input mode to HDMI1 on the TV.
+
+Rasparmony starts as fork of `lirc_web` with the idea to extend it adding more features in order to be user friendly with a easy setup. 
+
 Rasparmony use:
 
-* LIRC Node - []
+* LIRC Web - [https://github.com/alexbain/lirc_web]
+* LIRC Node - [https://github.com/alexbain/lirc_node]
 * MobileAngularUI - [http://mobileangularui.com/]
 
+## Usage
 
-Rasparmony is a fork from `lirc_web`.
+### From GIT repo
+```
+git clone https://github.com/jdavisonc/rasparmony.git
+cd rasparmony
+cp test/fixtures/config.json .
+
+# here edit the config.json with your configuration (this will be necessary in a near future)
+# vim config.json
+# nano config.json
+
+npm install
+npm app.js
+```
+
+### From Docker image
+
+```
+# to be continue
+```
+
+### config.json
+
+```
+{
+  "remotes": {
+    "TV": {
+      "name": "TV",              /* name of the remote */
+      "code": "LHV4420"          /* code used on lirc to identify the remote, used on lircd.conf */
+    },
+    "HomeTheater": {
+      "name": "HomeTheater",     
+      "code": "888888"			 
+    }
+  },
+  "macros": {
+    "TV": {
+      "name": "TV", 			 /* name of the macro */
+      "icon": "gamepad",         /* icon from font-awesome */
+      "commands": [
+        {
+          "remote": "TV",        /* name of the remote on section remotes */
+          "command": "KEY_POWER" /* standard lirc key to send */
+        },
+        {
+          "remote": "HomeTheater",
+          "command": "KEY_POWER"
+        }
+      ]
+    }
+  }
+}
+```
 
 ## License
 
 (The MIT License)
 
 Copyright (c) 2015 Jorge Davison &lt;jdavisonc@gmail.com&gt;
-Copyright (c) 2013 Alex Bain &lt;alex@alexba.in&gt;
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
