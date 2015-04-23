@@ -78,21 +78,23 @@ app.get('/macros/:macro', function(req, res) {
     }
 });
 
-
-// Send :remote/:command one time
-app.post('/remotes/:remote/:command', function(req, res) {
-	var remote = config.remotes[req.params.remote];
-	var command = req.params.command;
-
-	if (remote.commandAlias[command]) {
+var sendCommand = function (remote, command, callback) {
+	if (remote.commandAlias && remote.commandAlias[command]) {
 		command = remote.commandAlias[command];
 	} else if (command.lastIndexOf('KEY', 0) !== 0) {
 		command = 'KEY_' + command;
 	}
 
 	console.log("COMMAND: " + command + " REMOTE: " + remote.code);
+    lirc_node.irsend.send_once(remote.code, command, callback);
+};
 
-    lirc_node.irsend.send_once(remote.code, command, function() {});
+// Send :remote/:command one time
+app.post('/remotes/:remote/:command', function(req, res) {
+	var remote = config.remotes[req.params.remote];
+	var command = req.params.command;
+
+	sendCommand(remote, command, function() {});
     res.setHeader('Cache-Control', 'no-cache');
     res.send(200);
 });
@@ -118,7 +120,7 @@ app.post('/macros/:macro', function(req, res) {
             	console.log("MACRO: " + req.params.macro + " COMMAND: " + command.command + " REMOTE: " + remote.code);
 
                 // By default, wait 100msec before calling next command
-                lirc_node.irsend.send_once(remote.code, command.command, function() { setTimeout(nextCommand, 100); });
+                sendCommand(remote, command.command, function() { setTimeout(nextCommand, 100); });
             }
         };
 
