@@ -1,6 +1,7 @@
 // Requirements
 var express = require('express'),
-    lirc_node = require('lirc_node');
+    lirc_node = require('lirc_node'),
+    fs = require('fs');
 
 // Create app
 var app = module.exports = express();
@@ -31,6 +32,22 @@ if (process.env.NODE_ENV == 'test' || process.env.NODE_ENV == 'development') {
         console.log("WARNING: Cannot find config.json!");
     }
 }
+
+// Rasparmony configuration in JSON format
+app.get('/configurations', function(req, res) {
+    res.json(config);
+});
+
+app.post('/configurations', function(req, res) {
+	var configToSave = req.params.config;
+	fs.writeFile(__dirname + '/config.json', JSON.stringify(configToSave, null, 2), function(err) {
+	    if(err) {
+	      console.log(err);
+	    } else {
+	      console.log("Config saved to " + __dirname + '/config.json');
+	    }
+	});
+});
 
 // List all remotes in JSON format
 app.get('/remotes', function(req, res) {
@@ -66,7 +83,10 @@ app.get('/macros/:macro', function(req, res) {
 app.post('/remotes/:remote/:command', function(req, res) {
 	var remote = config.remotes[req.params.remote];
 	var command = req.params.command;
-	if (command.lastIndexOf('KEY', 0) !== 0) {
+
+	if (remote.commandAlias[command]) {
+		command = remote.commandAlias[command];
+	} else if (command.lastIndexOf('KEY', 0) !== 0) {
 		command = 'KEY_' + command;
 	}
 

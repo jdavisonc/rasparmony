@@ -3,7 +3,7 @@ Rasparmony
 
 Like Harmony but with a RaspberryPI - [https://medium.com/@jdavisonc/rasparmony-857ac725aa64]
 
-With Rasparmony you will be able to control all your devices with your smartphone, moreover Rasparmony enables you to run macros! Yes, macros... a set of commands to differents devices. This is, turn on your TV, the Home Theather and set input mode to HDMI1 on the TV.
+With Rasparmony you will be able to control all your devices with your smartphone, moreover Rasparmony enables you to run macros! Yes, macros... a set of commands to different devices. This is, turn on your TV, the Home Theather and set input mode to HDMI1 on the TV.
 
 Rasparmony starts as fork of `lirc_web` with the idea to extend it. It has a lot of new features in order to be user friendly with a easy setup. 
 
@@ -43,7 +43,11 @@ config.json
   "remotes": {
     "TV": {
       "name": "TV",              /* name of the remote */
-      "code": "LHV4420"          /* code used on lirc to identify the remote, used on lircd.conf */
+      "code": "LHV4420",         /* code used on lirc to identify the remote, used on lircd.conf */
+      "commandAlias": {
+        "INPUT": "tv/rad",       /* command alias, if there is no alias then will use the one passed to the API */
+        "INFO": "KEY_INFO"
+      }
     },
     "HomeTheater": {
       "name": "HomeTheater",     
@@ -68,6 +72,10 @@ config.json
   }
 }
 ```
+
+## API
+
+
 
 ## License
 

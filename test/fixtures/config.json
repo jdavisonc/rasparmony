@@ -6,7 +6,11 @@
     },
     "HomeTheater": {
       "name": "HomeTheater",
-      "code": "888888"
+      "code": "888888",
+      "commandAlias": {
+        "INPUT": "tv/rad",
+        "INFO": "KEY_INFO"
+      }
     }
   },
   "macros": {

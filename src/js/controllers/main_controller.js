@@ -3,18 +3,11 @@ angular.module('Rasparmony.controllers.Main', [])
 .controller('MainController', function($scope, $http, $routeParams){
 
 	var init = function() {
-		$http.get('/macros')
+		$http.get('/configurations')
 			.success(function(data) {
-		    	$scope.macros = data;
+		    	$scope.config = data;
 			}).error(function(data, status, headers, config) {
 		    	console.log("Error getting macros");
-			});
-
-		$http.get('/remotes')
-			.success(function(data) {
-		    	$scope.remotes = data;
-			}).error(function(data, status, headers, config) {
-		    	console.log("Error getting remotes");
 			});
 	};
 
@@ -33,6 +26,15 @@ angular.module('Rasparmony.controllers.Main', [])
 		    	;
 		  	}).error(function(data, status, headers, config) {
 		    	console.log("Error executing macro");
+		    });
+	};
+
+	$scope.saveConfiguration = function () {
+		$http.post('/configurations', $scope.config)
+			.success(function(data) {
+		    	;
+		  	}).error(function(data, status, headers, config) {
+		    	console.log("Error saving the configuration");
 		    });
 	};
 

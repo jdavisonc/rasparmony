@@ -1,7 +1,7 @@
 <div class="scrollable">  
   <div class="scrollable-content">
     <div class="list-group text-center">
-      <div class="list-group-item list-group-item-home" ng-repeat="macro in macros">
+      <div class="list-group-item list-group-item-home" ng-repeat="macro in config.macros">
         <a class="btn btn-lg btn-info" style="width: 100%" ng-click="execute(macro)">
           <i class="fa fa-{{macro.icon}} fa-3x pull-left"></i>{{macro.name}}
         </a>
