@@ -13,7 +13,8 @@ var config = {
     js: [
       './bower_components/angular/angular.js',
       './bower_components/angular-route/angular-route.js',
-      './bower_components/mobile-angular-ui/dist/js/mobile-angular-ui.js'
+      './bower_components/mobile-angular-ui/dist/js/mobile-angular-ui.js',
+      './bower_components/mobile-angular-ui/dist/js/mobile-angular-ui.gestures.js'
     ],
 
     fonts: [
@@ -259,10 +260,7 @@ gulp.task('default', function(done){
     tasks.push('weinre');
   }
 
-  if (typeof config.server === 'object') {
-    tasks.push('server');
-  }
-
+  tasks.push('server');
   tasks.push('watch');
   
   seq('build', tasks, done);

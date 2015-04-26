@@ -1,6 +1,7 @@
 angular.module('Rasparmony', [
   'ngRoute',
   'mobile-angular-ui',
+  'mobile-angular-ui.gestures',
   'Rasparmony.controllers.Main'
 ])
 

@@ -13,20 +13,16 @@ Rasparmony use:
 * LIRC Node - [https://github.com/alexbain/lirc_node]
 * MobileAngularUI - [http://mobileangularui.com/]
 
+
 ## Usage
 
 ### From GIT repo
 ```
-git clone https://github.com/jdavisonc/rasparmony.git
-cd rasparmony
-cp test/fixtures/config.json .
+$ git clone https://github.com/jdavisonc/rasparmony.git
+$ cd rasparmony
 
-# here edit the config.json with your configuration (this will be necessary in a near future)
-# vim config.json
-# nano config.json
-
-npm install
-npm app.js
+$ npm install
+$ npm app.js
 ```
 
 ### From Docker image
@@ -37,11 +33,15 @@ npm app.js
 
 ## Configuration
 
+The configuration of Rasparmony should be prety easy. First, you need to configure your remotes codes on lirc and then start Rasparmony and redirect to `Configuration` section, after that add your remotes or macros via the UI and save it. The UI will create a file `config.json` with the proper configuration.
+
+If you anyway want to configure Rasparmony via file, please check the format below:
+
 config.json
 ```
 {
-  "remotes": {
-    "TV": {
+  "remotes": [
+    {
       "name": "TV",              /* name of the remote */
       "code": "LHV4420",         /* code used on lirc to identify the remote, used on lircd.conf */
       "commandAlias": {
@@ -49,32 +49,50 @@ config.json
         "INFO": "KEY_INFO"
       }
     },
-    "HomeTheater": {
+    {
       "name": "HomeTheater",     
       "code": "888888"			 
     }
-  },
-  "macros": {
-    "TV": {
+  ],
+  "macros": [
+    {
       "name": "TV", 			 /* name of the macro */
       "icon": "gamepad",         /* icon from font-awesome */
       "commands": [
         {
-          "remote": "TV",        /* name of the remote on section remotes */
+          "remote": "LHV4420",   /* code of the remote on section remotes */
           "command": "KEY_POWER" /* standard lirc key to send */
         },
         {
-          "remote": "HomeTheater",
+          "remote": "888888",
           "command": "KEY_POWER"
         }
       ]
     }
-  }
+  ]
 }
 ```
 
 ## API
 
+
+## ScreenShots
+
+![Image](http://i.imgur.com/wqfFmBb.png)
+![Image](http://i.imgur.com/7xvgqqu.png)
+![Image](http://i.imgur.com/kR9wcBh.png)
+
+More Images on http://imgur.com/a/yeiic#wqfFmBb
+
+## Development
+
+```
+$ git clone https://github.com/jdavisonc/rasparmony.git
+$ cd rasparmony
+$ gulp
+
+# Server starts on port 3000
+```
 
 
 ## License

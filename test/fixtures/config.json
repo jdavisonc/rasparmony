@@ -1,90 +1,96 @@
 {
-  "remotes": {
-    "TV": {
+  "remotes": [
+    {
       "name": "TV",
       "code": "LHV4420"
     },
-    "HomeTheater": {
+    {
       "name": "HomeTheater",
       "code": "888888",
-      "commandAlias": {
-        "INPUT": "tv/rad",
-        "INFO": "KEY_INFO"
-      }
+      "commandAlias": [
+        { 
+          "command": "INPUT",
+          "alias": "tv/rad"
+        },
+        {
+          "command": "INFO",
+          "alias": "KEY_INFO"
+        }
+      ]
     }
-  },
-  "macros": {
-    "TV": {
+  ],
+  "macros": [
+    {
       "name": "TV",
       "icon": "gamepad",
       "commands": [
         {
-          "remote": "TV",
-          "command": "KEY_POWER"
+          "remote": "LHV4420",
+          "command": "POWER"
         },
         {
-          "remote": "HomeTheater",
-          "command": "KEY_POWER"
+          "remote": "888888",
+          "command": "POWER"
         }
       ]
     },
-    "Nexus Player": {
+    {
       "name": "Nexus Player",
       "icon": "youtube-play",
       "commands": [
         {
-          "remote": "TV",
-          "command": "KEY_POWER"
+          "remote": "LHV4420",
+          "command": "POWER"
         },
         {
-          "remote": "TV",
-          "command": "KEY_INPUT"
+          "remote": "LHV4420",
+          "command": "INPUT"
         },
         {
-          "remote": "TV",
-          "command": "KEY_INPUT"
+          "remote": "LHV4420",
+          "command": "INPUT"
         }
       ]
     },
-    "Cable": {
+    {
       "name": "Cable",
       "icon": "code-fork",
       "commands": [
         {
-          "remote": "TV",
-          "command": "KEY_INPUT"
+          "remote": "LHV4420",
+          "command": "INPUT"
         },
         {
-          "remote": "TV",
-          "command": "KEY_INPUT"
+          "remote": "LHV4420",
+          "command": "INPUT"
         },
         {
-          "remote": "TV",
-          "command": "KEY_INPUT"
+          "remote": "LHV4420",
+          "command": "INPUT"
         }
       ]
     },
-    "Radio": {
+    {
       "name": "Radio",
       "icon": "headphones",
       "commands": [
         {
-          "remote": "HomeTheater",
-          "command": "KEY_POWER"
+          "remote": "888888",
+          "command": "POWER"
         },
         {
-          "remote": "HomeTheater",
-          "command": "KEY_INPUT"
+          "remote": "888888",
+          "command": "INPUT"
         },
         {
-          "remote": "HomeTheater",
-          "command": "KEY_INPUT"
+          "remote": "888888",
+          "command": "INPUT"
         },
         {
-          "remote": "HomeTheater",
-          "command": "KEY_INPUT"
+          "remote": "888888",
+          "command": "INPUT"
         }
       ]
     }
-  }
+  ]
 }
