@@ -33,7 +33,7 @@ chmod +x init.d/rasparmony
 sudo update-rc.d rasparmony default
 
 # Now you can execute Rasparmony as a Service on your RasperryPI
-sudo /etc/init.d/rasparmony start|stop
+sudo service rasparmony start|stop
 ```
 
 NOTE: Update `RASPARMONY_PATH` variable with the actual PATH where you locate Rasparmony code.
