@@ -1,0 +1,18 @@
+#!/bin/sh
+
+export PATH=$PATH:/usr/local/bin
+export NODE_PATH=$NODE_PATH:/usr/local/lib/node_modules
+RASPARMONY_PATH=/home/pi/rasparmony
+
+case "$1" in
+  start)
+  cd $RASPARMONY_PATH
+  exec forever start --uid "rasparmony" app.js
+  ;;
+
+  stop)
+  exec forever stop "rasparmony"
+  ;;
+esac
+
+exit 0
