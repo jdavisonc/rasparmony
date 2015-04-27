@@ -50,6 +50,9 @@ var getRemoteByCode = function(code) {
 var getMacro = function(name) {
 	return config.macros.find(function(m) {return m.name == name;})
 };
+var getAlias = function(remote, alias) {
+    return remote.commandAlias && remote.commandAlias.find(function(a) {return a.alias == alias;})
+};
 
 // Rasparmony configuration in JSON format
 app.get('/configurations', function(req, res) {
@@ -99,8 +102,9 @@ app.get('/macros/:macro', function(req, res) {
 });
 
 var sendCommand = function (remote, command, callback) {
-	if (remote.commandAlias && remote.commandAlias[command]) {
-		command = remote.commandAlias[command];
+    var alias = getAlias(remote, command);
+	if (alias) {
+		command = alias.command;
 	} else if (command.lastIndexOf('KEY', 0) !== 0) {
 		command = 'KEY_' + command;
 	}

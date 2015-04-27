@@ -9,12 +9,12 @@
       "code": "888888",
       "commandAlias": [
         { 
-          "command": "INPUT",
-          "alias": "tv/rad"
+          "command": "tv/rad",
+          "alias": "INPUT"
         },
         {
-          "command": "INFO",
-          "alias": "KEY_INFO"
+          "command": "KEY_INFO",
+          "alias": "INFO"
         }
       ]
     }
