@@ -53,6 +53,33 @@ var getMacro = function(name) {
 var getAlias = function(remote, alias) {
     return remote.commandAlias && remote.commandAlias.find(function(a) {return a.alias == alias;})
 };
+var getStateByName = function(remote, name) {
+    return remote.states && remote.states.find(function(a) {return a.name == name;})
+};
+var getStateByTrigger = function(remote, trigger) {
+    return remote.states && remote.states.find(function(a) {return a.trigger == trigger;})
+};
+var updateState = function(remote, trigger) {
+    var state = getStateByTrigger(remote, trigger);
+
+    if (state && state.type == "options") {
+        
+        if (state.menuTrigger && (!state.lastChange || ((new Date() - state.lastChange) / 1000) > state.menuTimeout)) {
+            state.lastChange = new Date();
+            console.log("Menu triggered by command: " + trigger);
+            return ;
+        }
+
+        if (!state.value) {
+            state.value = state.defaultValue;
+        }
+        var oldValue = state.value;
+        var index = state.options.indexOf(state.value);
+        state.value = state.options[(index + 1) % state.options.length];
+        state.lastChange = new Date();
+        console.log("State '" + state.name + "' of "+remote.name+" change '" + oldValue + "'->'" + state.value +"'");
+    }
+};
 
 // Rasparmony configuration in JSON format
 app.get('/configurations', function(req, res) {
@@ -76,9 +103,15 @@ app.get('/remotes', function(req, res) {
     res.json(lirc_node.remotes);
 });
 
-// List all commands for :remote in JSON format
+// List remote properties
 app.get('/remotes/:remote', function(req, res) {
 	var remote = getRemote(req.params.remote);
+    res.json(remote);
+});
+
+// List all commands for :remote in JSON format
+app.get('/remotes/:remote/commands', function(req, res) {
+    var remote = getRemote(req.params.remote);
     if (lirc_node.remotes[remote.code]) {
         res.json(lirc_node.remotes[remote.code]);
     } else {
@@ -103,18 +136,36 @@ app.get('/macros/:macro', function(req, res) {
 
 var sendCommand = function (remote, command, callback) {
     var alias = getAlias(remote, command);
+    var commandToSend = command;
 	if (alias) {
-		command = alias.command;
+		commandToSend = alias.command;
 	} else if (command.lastIndexOf('KEY', 0) !== 0) {
-		command = 'KEY_' + command;
+		commandToSend = 'KEY_' + command;
 	}
 
-	console.log("COMMAND: " + command + " REMOTE: " + remote.code);
-    lirc_node.irsend.send_once(remote.code, command, callback);
+    updateState(remote, (alias) ? alias.alias : command);
+	console.log("COMMAND: " + commandToSend + ", REMOTE: " + remote.code);
+    lirc_node.irsend.send_once(remote.code, commandToSend, callback);
+};
+
+var changeState = function (remote, expectedState, callback) {
+    var state = getStateByName(remote, expectedState.name);
+
+    if (!state.value) {
+        state.value = state.defaultValue;
+    }
+
+    if (state.value != expectedState.value) {
+        sendCommand(remote, state.trigger, function() { 
+            setTimeout( function() { changeState(remote, expectedState, callback); }, 1000); 
+        });
+    } else {
+        callback();
+    }
 };
 
 // Send :remote/:command one time
-app.post('/remotes/:remote/:command', function(req, res) {
+app.post('/remotes/:remote/commands/:command', function(req, res) {
 	var remote = getRemote(req.params.remote);
 	var command = req.params.command;
 
@@ -139,10 +190,16 @@ app.post('/macros/:macro', function(req, res) {
             i = i + 1;
             if (command.remote == "delay") {
                 setTimeout(nextCommand, command.command);
-                console.log("MACRO: " + req.params.macro + " COMMAND: delay " + command.command);
+                console.log("--> MACRO: " + req.params.macro + ", COMMAND: delay " + command.command);
+            } else if (command.state) {
+
+                var remote = getRemote(command.remote);
+                console.log("--> MACRO: " + req.params.macro + ", STATE: " + command.state.name + "='" + command.state.value + "', REMOTE: " + remote.name);
+
+                changeState(remote, command.state, function() { setTimeout(nextCommand, 100); });
             } else {
-            	var remote = getRemoteByCode(command.remote);
-            	console.log("MACRO: " + req.params.macro + " COMMAND: " + command.command + " REMOTE: " + remote.code);
+            	var remote = getRemote(command.remote);
+            	console.log("--> MACRO: " + req.params.macro + ", COMMAND: " + command.command + ", REMOTE: " + remote.name);
 
                 // By default, wait 100msec before calling next command
                 sendCommand(remote, command.command, function() { setTimeout(nextCommand, 100); });

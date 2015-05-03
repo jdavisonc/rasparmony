@@ -24,7 +24,7 @@ angular.module('Rasparmony.controllers.Main', ['mobile-angular-ui', 'mobile-angu
 	};
 
 	$scope.send = function (command) {
-		$http.post('/remotes/' + $routeParams.remote + '/' + command)
+		$http.post('/remotes/' + $routeParams.remote + '/commands/' + command)
 			.success(function(data) {
 		    	;
 		  	}).error(function(data, status, headers, config) {

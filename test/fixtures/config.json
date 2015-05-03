@@ -2,11 +2,54 @@
   "remotes": [
     {
       "name": "TV",
-      "code": "LHV4420"
+      "code": "LHV4420",
+      "states": [
+        {
+          "name": "power",
+          "menuTrigger": false,
+          "trigger": "POWER",
+          "type": "options",
+          "options": ["on","off"],
+          "defaultValue": "off"
+        },
+        {
+          "name": "input",
+          "menuTrigger": true,
+          "menuTimeout": "15",
+          "trigger": "INPUT",
+          "type": "options",
+          "options": ["tv","component","cable","player"],
+          "defaultValue": "tv"
+        }
+      ],
+      "commandAlias": [
+        { 
+          "command": "input",
+          "alias": "INPUT"
+        }
+      ]
     },
     {
       "name": "HomeTheater",
       "code": "888888",
+      "states": [
+        {
+          "name": "power",
+          "menuTrigger": false,
+          "trigger": "POWER",
+          "type": "options",
+          "options": ["on","off"],
+          "defaultValue": "off"
+        },
+        {
+          "name": "input",
+          "menuTrigger": false,
+          "trigger": "INPUT",
+          "type": "options",
+          "options": ["tv","component","cable","fm"],
+          "defaultValue": "tv"
+        }
+      ],
       "commandAlias": [
         { 
           "command": "tv/rad",
@@ -25,12 +68,12 @@
       "icon": "gamepad",
       "commands": [
         {
-          "remote": "LHV4420",
-          "command": "POWER"
+          "remote": "TV",
+          "state": { "name": "power", "value": "on" }
         },
         {
-          "remote": "888888",
-          "command": "POWER"
+          "remote": "HomeTheater",
+          "state": { "name": "power", "value": "on" }
         }
       ]
     },
@@ -39,16 +82,16 @@
       "icon": "youtube-play",
       "commands": [
         {
-          "remote": "LHV4420",
-          "command": "POWER"
+          "remote": "TV",
+          "state": { "name": "power", "value": "on" }
         },
         {
-          "remote": "LHV4420",
-          "command": "INPUT"
+          "remote": "HomeTheater",
+          "state": { "name": "power", "value": "on" }
         },
         {
-          "remote": "LHV4420",
-          "command": "INPUT"
+          "remote": "TV",
+          "state": { "name": "input", "value": "player" }
         }
       ]
     },
@@ -57,16 +100,16 @@
       "icon": "code-fork",
       "commands": [
         {
-          "remote": "LHV4420",
-          "command": "INPUT"
+          "remote": "TV",
+          "state": { "name": "power", "value": "on" }
         },
         {
-          "remote": "LHV4420",
-          "command": "INPUT"
+          "remote": "HomeTheater",
+          "state": { "name": "power", "value": "on" }
         },
         {
-          "remote": "LHV4420",
-          "command": "INPUT"
+          "remote": "TV",
+          "state": { "name": "input", "value": "cable" }
         }
       ]
     },
@@ -75,20 +118,22 @@
       "icon": "headphones",
       "commands": [
         {
-          "remote": "888888",
-          "command": "POWER"
+          "remote": "HomeTheater",
+          "state": { "name": "power", "value": "on" }
         },
         {
-          "remote": "888888",
-          "command": "INPUT"
-        },
+          "remote": "HomeTheater",
+          "state": { "name": "input", "value": "fm" }
+        }
+      ]
+    },
+    {
+      "name": "Command",
+      "icon": "code-fork",
+      "commands": [
         {
-          "remote": "888888",
-          "command": "INPUT"
-        },
-        {
-          "remote": "888888",
-          "command": "INPUT"
+          "remote": "TV",
+          "command": "VolumeUp"
         }
       ]
     }

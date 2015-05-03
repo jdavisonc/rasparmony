@@ -13,6 +13,13 @@ Rasparmony use:
 * LIRC Node - [https://github.com/alexbain/lirc_node]
 * MobileAngularUI - [http://mobileangularui.com/]
 
+## Features
+
+* API based
+* Send plain IR commands through API
+* Device and commands alias
+* Mobile WebUI to easy configure your devices
+* *Device States*: Holds the device state depending on the configuration. This enable the user to configure macros in a more real way instead of set how many time the command X should be send. Just set the expected state of the device in the macro, supports more than one state per device (see config.json).
 
 ## Usage
 
@@ -55,10 +62,29 @@ config.json
 {
   "remotes": [
     {
-      "name": "TV",              /* name of the remote */
-      "code": "LHV4420",         /* code used on lirc to identify the remote, used on lircd.conf */
+      "name": "TV",                     /* name of the remote */
+      "code": "LHV4420",                /* code used on lirc to identify the remote, used on lircd.conf */
+      "states": [                       /* manage the state of the device */
+        {
+          "name": "power",              /* name of the state */
+          "menuTrigger": false,  
+          "trigger": "POWER",           /* ir command that trigger the switch of options */
+          "type": "options",            /* type of state: ["options"] */
+          "options": ["on","off"],      /* posible values of state */
+          "defaultValue": "off"         /* default values when initialize */
+        },
+        {
+          "name": "input",
+          "menuTrigger": true,          /* if first time the trigger will trigger menu instead of switch options */
+          "menuTimeout": "15",          /* time in seconds the menu remains open */
+          "trigger": "INPUT",
+          "type": "options",
+          "options": ["tv","component","cable","player"],
+          "defaultValue": "tv"
+        }
+      ],
       "commandAlias": {
-        "INPUT": "tv/rad",       /* command alias, if there is no alias then will use the one passed to the API */
+        "INPUT": "tv/rad",              /* command alias, if there is no alias then will use the one passed to the API */
         "INFO": "KEY_INFO"
       }
     },
@@ -69,16 +95,37 @@ config.json
   ],
   "macros": [
     {
-      "name": "TV", 			 /* name of the macro */
-      "icon": "gamepad",         /* icon from font-awesome */
+      "name": "Nexus Player",     /* name of the macro */
+      "icon": "youtube-play",     /* icon from font-awesome */
       "commands": [
         {
-          "remote": "LHV4420",   /* code of the remote on section remotes */
-          "command": "KEY_POWER" /* standard lirc key to send */
+          "remote": "TV",         /* name of the remote on section remotes */
+          "state": {              /* expected state of device, will switch options until final state is reached */
+          	"name": "power", 
+          	"value": "on" 
+          }   
         },
         {
-          "remote": "888888",
-          "command": "KEY_POWER"
+          "remote": "HomeTheater",
+          "state": { "name": "power", "value": "on" }
+        },
+        {
+          "remote": "TV",
+          "state": { "name": "input", "value": "player" }
+        }
+      ]
+    },
+    {
+      "name": "TV", 			 
+      "icon": "gamepad",         
+      "commands": [
+        {
+          "remote": "TV",        
+          "command": "POWER"       /* standard lirc key to send, can be set without 'KEY_' (will be appended) */
+        },
+        {
+          "remote": "HomeTheater",
+          "command": "POWER"
         }
       ]
     }
