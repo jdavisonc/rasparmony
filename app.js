@@ -157,7 +157,7 @@ var changeState = function (remote, expectedState, callback) {
 
     if (state.value != expectedState.value) {
         sendCommand(remote, state.trigger, function() { 
-            setTimeout( function() { changeState(remote, expectedState, callback); }, 1000); 
+            setTimeout( function() { changeState(remote, expectedState, callback); }, 100); 
         });
     } else {
         callback();
