@@ -81,6 +81,10 @@ var updateState = function(remote, trigger) {
     }
 };
 
+var getDelay = function() {
+    return (config.general && config.general.defaultDelay) ? config.general.defaultDelay : 100;
+};
+
 // Rasparmony configuration in JSON format
 app.get('/configurations', function(req, res) {
     res.json(config);
@@ -157,7 +161,7 @@ var changeState = function (remote, expectedState, callback) {
 
     if (state.value != expectedState.value) {
         sendCommand(remote, state.trigger, function() { 
-            setTimeout( function() { changeState(remote, expectedState, callback); }, 100); 
+            setTimeout( function() { changeState(remote, expectedState, callback); }, getDelay()); 
         });
     } else {
         callback();
@@ -196,13 +200,13 @@ app.post('/macros/:macro', function(req, res) {
                 var remote = getRemote(command.remote);
                 console.log("--> MACRO: " + req.params.macro + ", STATE: " + command.state.name + "='" + command.state.value + "', REMOTE: " + remote.name);
 
-                changeState(remote, command.state, function() { setTimeout(nextCommand, 100); });
+                changeState(remote, command.state, function() { setTimeout(nextCommand, getDelay()); });
             } else {
             	var remote = getRemote(command.remote);
             	console.log("--> MACRO: " + req.params.macro + ", COMMAND: " + command.command + ", REMOTE: " + remote.name);
 
                 // By default, wait 100msec before calling next command
-                sendCommand(remote, command.command, function() { setTimeout(nextCommand, 100); });
+                sendCommand(remote, command.command, function() { setTimeout(nextCommand, getDelay()); });
             }
         };
 

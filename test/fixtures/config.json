@@ -1,4 +1,8 @@
 {
+  "general": 
+  {
+    "defaultDelay": "300"
+  },
   "remotes": [
     {
       "name": "TV",

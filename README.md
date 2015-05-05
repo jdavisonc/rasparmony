@@ -60,6 +60,10 @@ If you anyway want to configure Rasparmony via file, please check the format bel
 config.json
 ```
 {
+  "general": 
+  {
+    "defaultDelay": "300"				/* default delay between sending each command in millis */
+  },
   "remotes": [
     {
       "name": "TV",                     /* name of the remote */
