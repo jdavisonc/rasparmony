@@ -2,6 +2,8 @@ angular.module('Rasparmony.controllers.Main', ['mobile-angular-ui', 'mobile-angu
 
 .controller('MainController', function($rootScope, $scope, $http, $routeParams){
 
+	$scope.stateTypes = [ "options" ];
+
 	$scope.newRemote;
 
 	$scope.remote = function () {
@@ -70,6 +72,17 @@ angular.module('Rasparmony.controllers.Main', ['mobile-angular-ui', 'mobile-angu
 			remote.commandAlias = [];
 		}
 		remote.commandAlias.push({});
+	};
+
+	$scope.newState = function(remote) {
+		if (!remote.states) {
+			remote.states = [];
+		}
+		remote.states.push({});
+	};
+
+	$scope.removeState = function(remote, index) {
+		remote.states.splice(index, 1);
 	};
 
 	$scope.addRemote = function(newRemote) {

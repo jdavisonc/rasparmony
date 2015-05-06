@@ -1,114 +1,147 @@
 <div ui-content-for="title">
-  <span>Configuration</span>
+    <span>Configuration</span>
 </div>
-
 <div class="scrollable">
- <div class="scrollable-content">
- 	<form role="form" ng-submit='saveConfigurations()' class="form-horizontal">
-	    <div class='section'>
-	      <ui-state id='activeTab' default='1'></ui-state>
+    <div class="scrollable-content">
+        <form role="form" ng-submit='saveConfigurations()' class="form-horizontal">
+            <div class='section'>
+                <ui-state id='activeTab' default='1'></ui-state>
+                <div class="btn-group justified nav-tabs">
+                    <a ui-set="{'activeTab': 1}" ui-class="{'active': activeTab == 1}" class="btn btn-default">Remotes</a>
+                    <a ui-set="{'activeTab': 2}" ui-class="{'active': activeTab == 2}" class="btn btn-default">States</a>
+                    <a ui-set="{'activeTab': 3}" ui-class="{'active': activeTab == 3}" class="btn btn-default">Macros</a>
+                    <a ui-set="{'activeTab': 4}" ui-class="{'active': activeTab == 4}" class="btn btn-default">General</a>
+                </div>
+                <div ui-if="activeTab == 1" style="padding: 10px">
+                    <fieldset>
+                        <div ng-repeat="remote in config.remotes">
+                            <div class="form-group">
+                                <label>{{remote.code}}</label>
+                                <input ng-model="remote.name" class="form-control" placeholder="Enter remote label">
+                            </div>
+                            <div ng-show="remote.commandAlias">
+                                <label>Alias</label>
+                                <div class="form-group" ng-repeat="alias in remote.commandAlias">
+                                    <div class="col-xs-5">
+                                        <input ng-model="alias.command" class="form-control" placeholder="Enter remote label">
+                                    </div>
+                                    <div class="col-xs-5">
+                                        <input ng-model="alias.alias" class="form-control" placeholder="Enter remote label">
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <a ng-click="removeAlias(remote, $index)" class="btn btn-sm btn-danger"><i class="fa fa-trash-o fa-lg"></i> </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <a ng-click="newAlias(remote)" class="btn btn-sm btn-info"><i class="fa fa-plus fa-lg"></i> Add Alias</a>
+                            </div>
+                            <hr>
+                        </div>
+                        <div>
+                            <div class="col-xs-6">
+                                <select class="form-control" ng-model="newRemote" ng-options="k as k for (k,v) in definedRemotes">
+                                </select>
+                            </div>
+                            <div class="col-xs-6">
+                                <a ng-click="addRemote(newRemote)" class="btn btn-sm btn-info"><i class="fa fa-plus fa-lg"></i> Add Remote</a>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
 
-	      <div class="btn-group justified nav-tabs">
-	        <a ui-set="{'activeTab': 1}" 
-	            ui-class="{'active': activeTab == 1}" class="btn btn-default">Remotes</a>
+				<div ui-if="activeTab == 2" style="padding: 10px">
+                    <fieldset>
+                        <div ng-repeat="remote in config.remotes">
+                        	<h3>{{remote.name}}</h3>
+                            <div ng-repeat="state in remote.states">
+                                <div class="form-group">
+	                                <label>Name</label>
+	                                <input ng-model="state.name" class="form-control" placeholder="Enter state name">
+                            	</div>
+                                <div class="form-group">
+	                                <label>Trigger</label>
+	                                <input ng-model="state.trigger" class="form-control" placeholder="Enter command state trigger">
+                            	</div>
+                                <div class="form-group">
+	                                <label>Options</label>
+	                                <input ng-model="state.options" class="form-control" ng-list=", " placeholder="List of values to set splitted by comma">
+                            	</div>
+                                <div class="form-group">
+	                                <label>Default value</label>
+	                                <input ng-model="state.defaultValue" class="form-control" placeholder="Default value to assign the state at initial time">
+                            	</div>
+                                <div class="form-group">
+	                                <label>Type</label>
+	                                <select ng-model="state.type" class="form-control" ng-options="type for type in stateTypes"></select>
+                            	</div>
+                                <div class="form-group">
+	                                <label>Trigger Menu?</label>
+	                                <ui-switch ng-model="state.menuTrigger"></ui-switch>
+                            	</div>
+                                <div class="form-group" ng-show="state.menuTrigger">
+	                                <label>Menu Timeout</label>
+	                                <input ng-model="state.menuTimeout" class="form-control" placeholder="Actual time the menu keeps open in seconds">
+                            	</div>
+                            	<a ng-click="removeState(remote, $index)" class="btn btn-sm btn-danger"><i class="fa fa-minus fa-lg"></i> Remove State</a>
+                            	<hr>
+                            </div>
+                            <div class="form-group">
+                                <a ng-click="newState(remote)" class="btn btn-sm btn-info"><i class="fa fa-plus fa-lg"></i> Add State to {{remote.name}}</a>
+                            </div>
+                            <hr>
+                        </div>
+                    </fieldset>
+				</div>
 
-	        <a ui-set="{'activeTab': 2}" 
-	            ui-class="{'active': activeTab == 2}" class="btn btn-default">Macros</a>
-	      </div>  
-
-	      <div ui-if="activeTab == 1" style="padding: 10px">
-		    <fieldset>
-		      	<div ng-repeat="remote in config.remotes">
-			        <div class="form-group">
-			        	<label>{{remote.code}}</label>
-			        	<input ng-model="remote.name"
-			                class="form-control"
-			                placeholder="Enter remote label">
-		            </div>
-			        <div ng-show="remote.commandAlias">
-			        	<label>Alias</label>
-			        	<div class="form-group" ng-repeat="alias in remote.commandAlias">
-				        	<div class="col-xs-5">
-					        	<input ng-model="alias.command"
-					                class="form-control"
-					                placeholder="Enter remote label">
-			                </div>
-			                <div class="col-xs-5">
-				            	<input ng-model="alias.alias"
-					                class="form-control"
-					                placeholder="Enter remote label">
-			                </div>
-			                <div class="col-xs-2">
-								<a ng-click="removeAlias(remote, $index)" class="btn btn-sm btn-danger"><i class="fa fa-trash-o fa-lg"></i> </a>
-					        </div>
-		                </div>
-		            </div>
-		            <div class="form-group">
-		            	<a ng-click="newAlias(remote)" class="btn btn-sm btn-info"><i class="fa fa-plus fa-lg"></i> Add Alias</a>
-	            	</div>
-	            	<hr>
-		        </div>
-		        <div>
-		        	<div class="col-xs-6">
-						<select class="form-control" ng-model="newRemote" ng-options="k as k for (k,v) in definedRemotes">
-						</select>
-		            </div>
-			        <div class="col-xs-6">
-						<a ng-click="addRemote(newRemote)" class="btn btn-sm btn-info"><i class="fa fa-plus fa-lg"></i> Add Remote</a>
-			        </div>
-		        </div>
-		    </fieldset>
-	      </div>
-
-	      <div ui-if="activeTab == 2" style="padding: 10px">
-		    <fieldset>
-		      	<div ng-repeat="macro in config.macros">
-			        <div class="form-group">
-			        	<label>Name</label>
-			        	<input ng-model="macro.name"
-			                class="form-control"
-			                placeholder="Enter remote label">
-		            </div>
-			        <div class="form-group">
-			        	<label>Icon</label>
-			        	<input ng-model="macro.icon"
-			                class="form-control"
-			                placeholder="Enter remote label">
-		            </div>
-		            <div class="form-group" ng-show="macro.commands">
-			            <label>Commands</label>
-						<div class="form-group" ng-repeat="command in macro.commands">
-				        	<div class="col-xs-5">
-								<select class="form-control" ng-model="command.remote" ng-options="item.code as item.name for item in config.remotes"></select>
-				            </div>
-				            <div class="col-xs-5">
-				            	<input ng-model="command.command"
-					                class="form-control"
-					                placeholder="Enter remote label" >
-					        </div>
-					        <div class="col-xs-2">
-								<a ng-click="removeCommand(macro, $index)" class="btn btn-sm btn-danger"><i class="fa fa-trash-o fa-lg"></i> </a>
-					        </div>
-			            </div>
-		            </div>	
-		            <div class="form-group">
-		            	<a ng-click="newCommand(macro)" class="btn btn-sm btn-info"><i class="fa fa-plus fa-lg"></i> Add Command</a>
-		            	<a ng-click="removeMacro($index)" class="btn btn-sm btn-danger"><i class="fa fa-minus fa-lg"></i> Remove Macro</a>
-	            	</div>
-		            <hr>
-		        </div>
-		        <div>
-					<a ng-click="addMacro()" class="btn btn-sm btn-info"><i class="fa fa-plus fa-lg"></i> Add Macro</a>
-		        </div>
-		    </fieldset>
-	      </div>
-	    </div>
-
-		<div class='section'>
-			<input type="submit" class="btn btn-primary btn-block" value="Save"></input>
-		</div>
-
-	</form>
-  
- </div>
+                <div ui-if="activeTab == 3" style="padding: 10px">
+                    <fieldset>
+                        <div ng-repeat="macro in config.macros">
+                            <div class="form-group">
+                                <label>Name</label>
+                                <input ng-model="macro.name" class="form-control" placeholder="Enter remote label">
+                            </div>
+                            <div class="form-group">
+                                <label>Icon</label>
+                                <input ng-model="macro.icon" class="form-control" placeholder="Enter remote label">
+                            </div>
+                            <div class="form-group" ng-show="macro.commands">
+                                <label>Commands</label>
+                                <div class="form-group" ng-repeat="command in macro.commands">
+                                    <div class="col-xs-5">
+                                        <select class="form-control" ng-model="command.remote" ng-options="item.code as item.name for item in config.remotes"></select>
+                                    </div>
+                                    <div class="col-xs-5">
+                                        <input ng-model="command.command" class="form-control" placeholder="Enter remote label">
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <a ng-click="removeCommand(macro, $index)" class="btn btn-sm btn-danger"><i class="fa fa-trash-o fa-lg"></i> </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <a ng-click="newCommand(macro)" class="btn btn-sm btn-info"><i class="fa fa-plus fa-lg"></i> Add Command</a>
+                                <a ng-click="removeMacro($index)" class="btn btn-sm btn-danger"><i class="fa fa-minus fa-lg"></i> Remove Macro</a>
+                            </div>
+                            <hr>
+                        </div>
+                        <div>
+                            <a ng-click="addMacro()" class="btn btn-sm btn-info"><i class="fa fa-plus fa-lg"></i> Add Macro</a>
+                        </div>
+                    </fieldset>
+                </div>
+                <div ui-if="activeTab == 4" style="padding: 10px">
+                    <fieldset>
+                        <div class="form-group">
+                            <label>Default delay</label>
+                            <input ng-model="config.general.defaultDelay" class="form-control" placeholder="Enter the default delay between each command in milliseconds">
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+            <div class='section'>
+                <input type="submit" class="btn btn-primary btn-block" value="Save"></input>
+            </div>
+        </form>
+    </div>
 </div>
