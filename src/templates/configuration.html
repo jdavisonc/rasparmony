@@ -109,10 +109,14 @@
                                 <label>Commands</label>
                                 <div class="form-group" ng-repeat="command in macro.commands">
                                     <div class="col-xs-5">
-                                        <select class="form-control" ng-model="command.remote" ng-options="item.code as item.name for item in config.remotes"></select>
+                                        <select class="form-control" ng-model="command.remote" ng-options="item.name as item.name for item in config.remotes"></select>
                                     </div>
-                                    <div class="col-xs-5">
-                                        <input ng-model="command.command" class="form-control" placeholder="Enter remote label">
+                                    <div class="col-xs-5" ng-show="command.state == null">
+                                        <select class="form-control" ng-model="command.command" ng-options="cmd for cmd in commands(command.remote)"></select>
+                                    </div>
+                                    <div class="col-xs-5" ng-show="command.state != null">
+                                        <select class="form-control" ng-model="command.state.name" ng-options="state.name as state.name for state in states(command.remote)"></select>
+                                        <input ng-model="command.state.value" class="form-control" placeholder="Enter state value label">
                                     </div>
                                     <div class="col-xs-2">
                                         <a ng-click="removeCommand(macro, $index)" class="btn btn-sm btn-danger"><i class="fa fa-trash-o fa-lg"></i> </a>
@@ -120,7 +124,8 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <a ng-click="newCommand(macro)" class="btn btn-sm btn-info"><i class="fa fa-plus fa-lg"></i> Add Command</a>
+                                <a ng-click="addStateToMacro(macro)" class="btn btn-sm btn-info"><i class="fa fa-plus fa-lg"></i> Add State</a>
+                                <a ng-click="addCommandToMacro(macro)" class="btn btn-sm btn-info"><i class="fa fa-plus fa-lg"></i> Add Command</a>
                                 <a ng-click="removeMacro($index)" class="btn btn-sm btn-danger"><i class="fa fa-minus fa-lg"></i> Remove Macro</a>
                             </div>
                             <hr>

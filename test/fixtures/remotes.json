@@ -4,6 +4,7 @@
     "VolumeUp",
     "VolumeDown",
     "ChannelUp",
+    "ChannelDown",
     "ChannelDown"
   ],
   "888888": [
@@ -11,6 +12,8 @@
     "VolumeUp",
     "VolumeDown",
     "ChannelUp",
-    "ChannelDown"
+    "ChannelDown",
+    "Opt",
+    "Radio"
   ]
 }

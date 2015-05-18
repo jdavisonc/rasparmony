@@ -2,6 +2,9 @@ angular.module('Rasparmony.controllers.Main', ['mobile-angular-ui', 'mobile-angu
 
 .controller('MainController', function($rootScope, $scope, $http, $routeParams){
 
+	$scope.config = {};
+	$scope.definedRemotes = {};
+	$scope.allStates = [];
 	$scope.stateTypes = [ "options" ];
 
 	$scope.newRemote;
@@ -23,7 +26,28 @@ angular.module('Rasparmony.controllers.Main', ['mobile-angular-ui', 'mobile-angu
 		  	}).error(function(data, status, headers, config) {
 		    	console.log("Error saving the configuration");
 		    });
+
 	};
+
+	$scope.commands = function(remoteName) {
+		var code;
+		angular.forEach($scope.config.remotes, function(remote) {
+			if (remoteName == remote.name) {
+				code = remote.code;
+			}
+    	});
+    	return $scope.definedRemotes[code];
+	};
+
+	$scope.states = function(remoteName) {
+		var states;
+    	angular.forEach($scope.config.remotes, function(remote) {
+    		if (remoteName == remote.name) {
+    			states = remote.states;
+    		}
+    	});
+    	return states;
+	}
 
 	$scope.send = function (command) {
 		$http.post('/remotes/' + $routeParams.remote + '/commands/' + command)
@@ -56,11 +80,18 @@ angular.module('Rasparmony.controllers.Main', ['mobile-angular-ui', 'mobile-angu
 		macro.commands.splice(index, 1);
 	};
 
-	$scope.newCommand = function(macro) {
+	$scope.addCommandToMacro = function(macro) {
 		if (!macro.commands) {
 			macro.commands = [];
 		}
 		macro.commands.push({});
+	};
+
+	$scope.addStateToMacro = function(macro) {
+		if (!macro.commands) {
+			macro.commands = [];
+		}
+		macro.commands.push({ state: {}});
 	};
 	
 	$scope.removeAlias = function(remote, index) {

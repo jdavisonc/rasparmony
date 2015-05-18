@@ -33,11 +33,6 @@ var config = {
 };
 
 
-if (require('fs').existsSync('./config.js')) {
-  var configFn = require('./config');
-  configFn(config);
-}
-
 /*-----  End of Configuration  ------*/
 
 
