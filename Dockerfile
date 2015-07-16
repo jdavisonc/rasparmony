@@ -1,4 +1,5 @@
-FROM hypriot/rpi-node
+FROM resin/rpi-node
+#FROM hypriot/rpi-node
 MAINTAINER Jorge Davison <jdavisonc@gmail.com>
 
 RUN apt-get update && \
@@ -6,15 +7,15 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 RUN mkdir rasparmony
-
 WORKDIR rasparmony
 
-COPY www www
 COPY app.js app.js
 COPY package.json package.json
 
-RUN npm install
+RUN npm install --production
+
+COPY www www
 
 EXPOSE 3000
 
-CMD ["node", "app.js"]
+CMD ["npm", "start"]

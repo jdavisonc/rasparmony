@@ -48,7 +48,8 @@ NOTE: Update `RASPARMONY_PATH` variable with the actual PATH where you locate Ra
 ### From Docker image
 
 ```
-# to be continue
+docker build -t rasparmony .
+docker run -d -p 3000:3000 -v /rasparmony/config:config -e RASPARMONY_CONFIG=/rasparmony/config/config.json --cap-add SYS_RAWIO --device /dev/mem rasparmony
 ```
 
 ## Configuration

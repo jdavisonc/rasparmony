@@ -31,7 +31,8 @@
     "gulp-angular-filesort": "^1.0.1",
     "streamqueue": "^0.1.1",
     "gulp-rename": "^1.2.0",
-    "gulp-live-server": "^0.0.14"
+    "gulp-live-server": "^0.0.14",
+    "bower": "*"
   },
   "scripts": {
     "start": "node app.js"
