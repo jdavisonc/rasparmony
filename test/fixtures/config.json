@@ -7,6 +7,8 @@
     {
       "name": "TV",
       "code": "LHV4420",
+      "definition": "LG_42H3000",
+      "brand": "lg",
       "states": [
         {
           "name": "power",
@@ -36,6 +38,8 @@
     {
       "name": "HomeTheater",
       "code": "888888",
+      "definition": "6710CDAP01B",
+      "brand": "lg",
       "states": [
         {
           "name": "power",

@@ -34,6 +34,28 @@ if (process.env.NODE_ENV == 'test' || process.env.NODE_ENV == 'development') {
     // Config file is optional
     try {
         config = require(__dirname + '/config.json');
+        // check lircrc existent include files and reconfigure
+        // 
+        // ## Update lirc configuration
+        // var fs = require('fs');
+        // fs.truncate('/rasparmony/lircrc', 0, function(){console.log('done')});
+        // 
+        // fs.writeFile('/rasparmony/lircrc', 'lircrc_class rasparmony', function(){console.log('done')})
+        // for (var i in config.remotes) {
+        //   var remote = config.remotes[i];
+        //   var line = 'include "/rasparmony/remotes/' + remote.brand + '/' + remote.definition + '.lircd.conf"';
+        //   fs.writeFile('/rasparmony/lircrc', line, function(){console.log('done')})
+        // }
+        //
+        // ## Start lircd as child process
+        // if (child == null) {
+        //   var spawn = require('child_process').spawn;
+        //   var child = spawn('lircd', ['--uinput','/rasparmony/lircrc']);
+        // }
+        // 
+        // ## Reload lirc
+        // child.kill('HUP);
+        //
     } catch(e) {
         console.log("DEBUG:", e);
         console.log("WARNING: Cannot find config.json!");

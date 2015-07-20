@@ -49,8 +49,12 @@ NOTE: Update `RASPARMONY_PATH` variable with the actual PATH where you locate Ra
 
 ```
 docker build -t rasparmony .
-docker run -d -p 3000:3000 -v /rasparmony/config:config -e RASPARMONY_CONFIG=/rasparmony/config/config.json --cap-add SYS_RAWIO --device /dev/mem rasparmony
+docker run -d -p 3000:3000-e RASPARMONY_CONFIG=/rasparmony/config/config.json --device /dev/mem:/dev/mem -v /lib/modules:/lib/modules -v /rasparmony/config:config --cap-add=ALL --rm --privileged -it rasparmony
 ```
+
+Variables:
+* LIRC_GPIO_IN - Default 16
+* LIRC_GPIO_OUT - Default 23
 
 ## Configuration
 
@@ -69,6 +73,8 @@ config.json
     {
       "name": "TV",                     /* name of the remote */
       "code": "LHV4420",                /* code used on lirc to identify the remote, used on lircd.conf */
+      "definition": "LHV4420",
+      "brand": "lg",
       "states": [                       /* manage the state of the device */
         {
           "name": "power",              /* name of the state */
@@ -96,6 +102,8 @@ config.json
     {
       "name": "HomeTheater",     
       "code": "888888"			 
+      "definition": "888888",
+      "brand": "lg",
     }
   ],
   "macros": [
