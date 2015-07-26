@@ -5,8 +5,7 @@
 # Requirements: git lircd
 # Author: Jorge Davison
 
-INSTALLATION_PATH=/tmp
-CODES_DIR=$INSTALLATION_PATH/lirc-remotes-code/remotes/
+CODES_DIR=lirc-remotes-code/remotes/
 LIRCD_CONF_PATH=/etc/lirc/lircd.conf
 
 _term() {
@@ -23,8 +22,6 @@ trap _term SIGINT
 cp $LIRCD_CONF_PATH $LIRCD_CONF_PATH.bck
 
 pushd $INSTALLATION_PATH
-
-git clone git://git.code.sf.net/p/lirc-remotes/code lirc-remotes-code
 cd $CODES_DIR
 
 printf "Please select the device brand:\n"

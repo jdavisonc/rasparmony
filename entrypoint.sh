@@ -1,8 +1,8 @@
 #!/bin/bash
 set -e
 
-LIRC_GPIO_IN=${LIRC_GPIO_IN:-16}
-LIRC_GPIO_OUT=${LIRC_GPIO_OUT:-23}
+LIRC_GPIO_IN=${LIRC_GPIO_IN:-23}
+LIRC_GPIO_OUT=${LIRC_GPIO_OUT:-22}
 
 # Load needed modules
 modprobe lirc_dev

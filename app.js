@@ -15,51 +15,39 @@ app.configure(function() {
     app.use(express.static(__dirname + '/www'));
 });
 
-
 // lirc_web configuration
 var config = {};
 var child = null;
 
-// Based on node environment, initialize connection to lirc_node or use test data
-if (process.env.NODE_ENV == 'test' || process.env.NODE_ENV == 'development') {
-    lirc_node.remotes = require(__dirname + '/test/fixtures/remotes.json');
-    try {
-        config = require(__dirname + '/test/fixtures/config.json');
-    } catch(e) {
-        console.log("DEBUG:", e);
-        console.log("WARNING: Cannot find config.json!");
-    }
-} else {
-    lirc_node.init();
-
-    // Config file is optional
-    try {
-        config = require(__dirname + '/config.json');
-        // check lircrc existent include files and reconfigure
-        // 
-        // Update lirc configuration
-        var lircrc = __dirname + '/lircrc';
-        fs.writeFileSync(lircrc, '');
-        
-        fs.appendFileSync(lircrc, 'lircrc_class rasparmony\n')
-        for (var i in config.remotes) {
-          var remote = config.remotes[i];
-          var line = 'include "' + __dirname + '/remotes/' + remote.brand + '/' + remote.definition + '.lircd.conf"\n';
-          fs.appendFileSync(lircrc, line)
-        }
-        
-        // Start lircd as child process
-        if (child != null) {
-            child.kill();
-        }
-        child = require('child_process').spawn('lircd', ['--uinput', lircrc]);
-    } catch(e) {
-        console.log("DEBUG:", e);
-        console.log("WARNING: Cannot find config.json!");
-    }
-}
-
 // Utility functions
+var loadLirc = function() {
+    // Update lirc configuration
+    var lircrc = __dirname + '/config/lircrc';
+    fs.writeFileSync(lircrc, '');
+    
+    fs.appendFileSync(lircrc, 'lircrc_class rasparmony\n')
+    for (var i in config.remotes) {
+      var remote = config.remotes[i];
+      var line = 'include "' + __dirname + '/lirc-remotes-code/remotes/' + remote.brand + '/' + remote.definition + '.lircd.conf"\n';
+      fs.appendFileSync(lircrc, line)
+    }
+    
+    // Start lircd as child process
+    if (child != null) {
+        child.kill();
+    }
+    child = require('child_process').spawn('lircd', ['--uinput', lircrc, '--device', '/dev/lirc0', '-n']);
+    child.stdout.on('data', 
+        function (data) {
+            console.log(data);
+        }
+    );
+    child.stderr.on('data', 
+        function (data) {
+            console.log(data);
+        }
+    );
+};
 var getRemote = function(name) {
 	return config.remotes.find(function(r) {return r.name == name;})
 };
@@ -99,9 +87,36 @@ var updateState = function(remote, trigger) {
         console.log("State '" + state.name + "' of "+remote.name+" change '" + oldValue + "'->'" + state.value +"'");
     }
 };
-
 var getDelay = function() {
     return (config.general && config.general.defaultDelay) ? config.general.defaultDelay : 100;
+};
+var sendCommand = function (remote, command, callback) {
+    var alias = getAlias(remote, command);
+    var commandToSend = command;
+    if (alias) {
+        commandToSend = alias.command;
+    } else if (command.lastIndexOf('KEY', 0) !== 0) {
+        commandToSend = 'KEY_' + command;
+    }
+
+    updateState(remote, (alias) ? alias.alias : command);
+    console.log("COMMAND: " + commandToSend + ", REMOTE: " + remote.code);
+    lirc_node.irsend.send_once(remote.code, commandToSend, callback);
+};
+var changeState = function (remote, expectedState, callback) {
+    var state = getStateByName(remote, expectedState.name);
+
+    if (!state.value) {
+        state.value = state.defaultValue;
+    }
+
+    if (state.value != expectedState.value) {
+        sendCommand(remote, state.trigger, function() { 
+            setTimeout( function() { changeState(remote, expectedState, callback); }, getDelay()); 
+        });
+    } else {
+        callback();
+    }
 };
 
 // Rasparmony configuration in JSON format
@@ -111,12 +126,13 @@ app.get('/configurations', function(req, res) {
 
 app.post('/configurations', function(req, res) {
 	var configToSave = req.body;
-	fs.writeFile(__dirname + '/config.json', JSON.stringify(configToSave, null, 2), function(err) {
+	fs.writeFile(__dirname + '/config/config.json', JSON.stringify(configToSave, null, 2), function(err) {
 	    if(err) {
 	    	console.log(err);
 	    } else {
 	    	config = configToSave;
-	      	console.log("Config saved to " + __dirname + '/config.json');
+	      	console.log("Config saved to " + __dirname + '/config/config.json');
+            loadLirc();
 	    }
 	});
 });
@@ -156,36 +172,6 @@ app.get('/macros/:macro', function(req, res) {
         res.send(404);
     }
 });
-
-var sendCommand = function (remote, command, callback) {
-    var alias = getAlias(remote, command);
-    var commandToSend = command;
-	if (alias) {
-		commandToSend = alias.command;
-	} else if (command.lastIndexOf('KEY', 0) !== 0) {
-		commandToSend = 'KEY_' + command;
-	}
-
-    updateState(remote, (alias) ? alias.alias : command);
-	console.log("COMMAND: " + commandToSend + ", REMOTE: " + remote.code);
-    lirc_node.irsend.send_once(remote.code, commandToSend, callback);
-};
-
-var changeState = function (remote, expectedState, callback) {
-    var state = getStateByName(remote, expectedState.name);
-
-    if (!state.value) {
-        state.value = state.defaultValue;
-    }
-
-    if (state.value != expectedState.value) {
-        sendCommand(remote, state.trigger, function() { 
-            setTimeout( function() { changeState(remote, expectedState, callback); }, getDelay()); 
-        });
-    } else {
-        callback();
-    }
-};
 
 // Send :remote/:command one time
 app.post('/remotes/:remote/commands/:command', function(req, res) {
@@ -235,6 +221,33 @@ app.post('/macros/:macro', function(req, res) {
     res.setHeader('Cache-Control', 'no-cache');
     res.send(200);
 });
+
+process.on('SIGINT', function() {
+  if (child != null) {
+    child.kill();
+  }
+  console.log("Chao Chao");
+  process.exit();
+});
+
+// Based on node environment, initialize connection to lirc_node or use test data
+if (process.env.NODE_ENV == 'test' || process.env.NODE_ENV == 'development') {
+    lirc_node.remotes = require(__dirname + '/test/fixtures/remotes.json');
+    try {
+        config = require(__dirname + '/test/fixtures/config.json');
+    } catch(e) {
+        console.log("DEBUG:", e);
+        console.log("WARNING: Cannot find config.json!");
+    }
+} else {
+    try {
+        config = require(__dirname + '/config/config.json');
+        loadLirc();
+        lirc_node.init();
+    } catch(e) {
+        console.log("WARNING:", e);
+    }
+}
 
 app.listen(3000);
 console.log("Rasparmony has started on port 3000.");
