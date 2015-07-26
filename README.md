@@ -29,7 +29,7 @@ $ git clone https://github.com/jdavisonc/rasparmony.git
 $ cd rasparmony
 
 $ npm install
-$ npm app.js
+$ npm start
 ```
 
 To start Rasparmony on boot time you will need to execute the following commands:
@@ -54,98 +54,6 @@ docker run -d -p 3000:3000-e RASPARMONY_CONFIG=/rasparmony/config/config.json --
 Variables:
 * LIRC_GPIO_IN - Default 23
 * LIRC_GPIO_OUT - Default 22
-
-## Configuration
-
-The configuration of Rasparmony should be prety easy. First, you need to configure your remotes codes on lirc and then start Rasparmony and redirect to `Configuration` section, after that add your remotes or macros via the UI and save it. The UI will create a file `config.json` with the proper configuration.
-
-If you anyway want to configure Rasparmony via file, please check the format below:
-
-config.json
-```
-{
-  "general": 
-  {
-    "defaultDelay": "300"				/* default delay between sending each command in millis */
-  },
-  "remotes": [
-    {
-      "name": "TV",                     /* name of the remote */
-      "code": "LHV4420",                /* code used on lirc to identify the remote, used on lircd.conf */
-      "definition": "LHV4420",
-      "brand": "lg",
-      "states": [                       /* manage the state of the device */
-        {
-          "name": "power",              /* name of the state */
-          "menuTrigger": false,  
-          "trigger": "POWER",           /* ir command that trigger the switch of options */
-          "type": "options",            /* type of state: ["options"] */
-          "options": ["on","off"],      /* posible values of state */
-          "defaultValue": "off"         /* default values when initialize */
-        },
-        {
-          "name": "input",
-          "menuTrigger": true,          /* if first time the trigger will trigger menu instead of switch options */
-          "menuTimeout": "15",          /* time in seconds the menu remains open */
-          "trigger": "INPUT",
-          "type": "options",
-          "options": ["tv","component","cable","player"],
-          "defaultValue": "tv"
-        }
-      ],
-      "commandAlias": {
-        "INPUT": "tv/rad",              /* command alias, if there is no alias then will use the one passed to the API */
-        "INFO": "KEY_INFO"
-      }
-    },
-    {
-      "name": "HomeTheater",     
-      "code": "888888"			 
-      "definition": "888888",
-      "brand": "lg",
-    }
-  ],
-  "macros": [
-    {
-      "name": "Nexus Player",     /* name of the macro */
-      "icon": "youtube-play",     /* icon from font-awesome */
-      "commands": [
-        {
-          "remote": "TV",         /* name of the remote on section remotes */
-          "state": {              /* expected state of device, will switch options until final state is reached */
-          	"name": "power", 
-          	"value": "on" 
-          }   
-        },
-        {
-          "remote": "HomeTheater",
-          "state": { "name": "power", "value": "on" }
-        },
-        {
-          "remote": "TV",
-          "state": { "name": "input", "value": "player" }
-        }
-      ]
-    },
-    {
-      "name": "TV", 			 
-      "icon": "gamepad",         
-      "commands": [
-        {
-          "remote": "TV",        
-          "command": "POWER"       /* standard lirc key to send, can be set without 'KEY_' (will be appended) */
-        },
-        {
-          "remote": "HomeTheater",
-          "command": "POWER"
-        }
-      ]
-    }
-  ]
-}
-```
-
-## API
 
 
 ## ScreenShots
