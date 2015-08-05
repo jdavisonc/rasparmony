@@ -24,7 +24,7 @@ angular.module('Rasparmony.controllers.Main', ['mobile-angular-ui', 'mobile-angu
 			.success(function(data) {
 		    	$scope.definedRemotes = data;
 		  	}).error(function(data, status, headers, config) {
-		    	console.log("Error saving the configuration");
+		    	console.log("Error getting configuration");
 		    });
 
 	};
@@ -116,11 +116,11 @@ angular.module('Rasparmony.controllers.Main', ['mobile-angular-ui', 'mobile-angu
 		remote.states.splice(index, 1);
 	};
 
-	$scope.addRemote = function(newRemote) {
+	$scope.addRemote = function() {
 		if (!$scope.config.remotes) {
 			$scope.config.remotes = [];
 		}
-		$scope.config.remotes.push({ "name": "", "code": newRemote });
+		$scope.config.remotes.push({ "name": "", "code": "" });
 	};
 
 	$scope.addMacro = function() {

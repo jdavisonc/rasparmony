@@ -21,7 +21,6 @@ COPY app.js app.js
 COPY package.json package.json
 
 RUN npm install --production
-
 COPY www www
 
 EXPOSE 3000

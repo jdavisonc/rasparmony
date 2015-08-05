@@ -249,5 +249,5 @@ if (process.env.NODE_ENV == 'test' || process.env.NODE_ENV == 'development') {
     }
 }
 
-app.listen(3000);
-console.log("Rasparmony has started on port 3000.");
+app.listen(process.env.PORT || 3000);
+console.log("Rasparmony node has started on port " + (process.env.PORT || 3000));

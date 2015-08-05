@@ -16,11 +16,23 @@
                     <fieldset>
                         <div ng-repeat="remote in config.remotes">
                             <div class="form-group">
-                                <label>{{remote.code}}</label>
+                                <label>Name</label>
                                 <input ng-model="remote.name" class="form-control" placeholder="Enter remote label">
                             </div>
+                            <div class="form-group">
+                                <label>LIRC code (name)</label>
+                                <input ng-model="remote.code" class="form-control" placeholder="Enter LIRC code (name) for the remote">
+                            </div>
+                            <div class="form-group">
+                                <label>LIRC definition</label>
+                                <input ng-model="remote.definition" class="form-control" placeholder="Enter LIRC definition to use for remote">
+                            </div>
+                            <div class="form-group">
+                                <label>Brand</label>
+                                <input ng-model="remote.brand" class="form-control" placeholder="Enter brand (LG, Samsung, etc) of the device">
+                            </div>
                             <div ng-show="remote.commandAlias">
-                                <label>Alias</label>
+                                <label>Command Alias</label>
                                 <div class="form-group" ng-repeat="alias in remote.commandAlias">
                                     <div class="col-xs-5">
                                         <input ng-model="alias.command" class="form-control" placeholder="Enter remote label">
@@ -40,11 +52,7 @@
                         </div>
                         <div>
                             <div class="col-xs-6">
-                                <select class="form-control" ng-model="newRemote" ng-options="k as k for (k,v) in definedRemotes">
-                                </select>
-                            </div>
-                            <div class="col-xs-6">
-                                <a ng-click="addRemote(newRemote)" class="btn btn-sm btn-info"><i class="fa fa-plus fa-lg"></i> Add Remote</a>
+                                 <a ng-click="addRemote()" class="btn btn-sm btn-info"><i class="fa fa-plus fa-lg"></i> Add Remote</a>
                             </div>
                         </div>
                     </fieldset>

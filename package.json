@@ -1,8 +1,8 @@
 {
   "name": "rasparmony",
-  "description": "A NodeJS / AngularJS app that creates a Mobile Web UI + API for LIRC",
+  "description": "A NodeJS / AngularJS app that creates an API and Mobile Web UI to control LIRC",
   "main": "app.js",
-  "version": "0.0.8",
+  "version": "1.0.0",
   "private": true,
   "version": "0.0.0",
   "dependencies": {

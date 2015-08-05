@@ -133,4 +133,6 @@ node_modules
 
 ### Bower ###
 bower_components
-
+www
+remotes
+config
