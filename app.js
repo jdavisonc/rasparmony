@@ -2,7 +2,8 @@
 var express = require('express'),
     lirc_node = require('lirc_node'),
     fs = require('fs'),
-    array = require('array.prototype.find');
+    array = require('array.prototype.find'),
+    lirc = require('./lirc.js');
 
 // Create app
 var app = module.exports = express();
@@ -16,8 +17,8 @@ app.configure(function() {
 });
 
 // lirc_web configuration
+var port = process.env.PORT || 3000;
 var config = {};
-var child = null;
 
 // Utility functions
 var loadLirc = function() {
@@ -29,24 +30,39 @@ var loadLirc = function() {
     for (var i in config.remotes) {
       var remote = config.remotes[i];
       var line = 'include "' + __dirname + '/lirc-remotes-code/remotes/' + remote.brand + '/' + remote.definition + '.lircd.conf"\n';
-      fs.appendFileSync(lircrc, line)
+      fs.appendFileSync(lircrc, line);
+    }
+
+    var irexecrc = __dirname + '/config/irexecrc';
+    fs.writeFileSync(irexecrc, '');
+    for (var i in config.macros) {
+      var macro = config.macros[i];
+      if (macro.trigger != null) {
+        fs.appendFileSync(irexecrc, 'begin\n');
+        fs.appendFileSync(irexecrc, ' prog = irexec\n');
+        fs.appendFileSync(irexecrc, ' remote = ' + getRemote(macro.trigger.remote).code + ' \n');
+        fs.appendFileSync(irexecrc, ' button = ' + macro.trigger.command + ' \n');
+        fs.appendFileSync(irexecrc, ' config = curl -X POST http://localhost:' + port + '/macros/' + macro.name + ' &\n');
+        fs.appendFileSync(irexecrc, 'end\n');
+      }
+    }
+    for (var i in config.remotes) {
+        var remote = config.remotes[i];
+        for (var j in remote.commandAlias) {
+          var alias = remote.commandAlias[j];
+          if (alias.trigger != null) {
+            fs.appendFileSync(irexecrc, 'begin\n');
+            fs.appendFileSync(irexecrc, ' prog = irexec\n');
+            fs.appendFileSync(irexecrc, ' remote = ' + getRemote(alias.trigger.remote).code + ' \n');
+            fs.appendFileSync(irexecrc, ' button = ' + alias.trigger.command + ' \n');
+            fs.appendFileSync(irexecrc, ' config = curl -X POST http://localhost:' + port + '/remotes/' + remote.name + '/commands/' + alias.alias + ' &\n');
+            fs.appendFileSync(irexecrc, 'end\n');
+          }
+      }
     }
     
     // Start lircd as child process
-    if (child != null) {
-        child.kill();
-    }
-    child = require('child_process').spawn('lircd', ['--uinput', lircrc, '--device', '/dev/lirc0', '-n']);
-    child.stdout.on('data', 
-        function (data) {
-            console.log(data);
-        }
-    );
-    child.stderr.on('data', 
-        function (data) {
-            console.log(data);
-        }
-    );
+    lirc.start(lircrc, irexecrc);
 };
 var getRemote = function(name) {
 	return config.remotes.find(function(r) {return r.name == name;})
@@ -223,9 +239,7 @@ app.post('/macros/:macro', function(req, res) {
 });
 
 process.on('SIGINT', function() {
-  if (child != null) {
-    child.kill();
-  }
+  lirc.stop();
   console.log("Chao Chao");
   process.exit();
 });
@@ -249,5 +263,5 @@ if (process.env.NODE_ENV == 'test' || process.env.NODE_ENV == 'development') {
     }
 }
 
-app.listen(process.env.PORT || 3000);
-console.log("Rasparmony node has started on port " + (process.env.PORT || 3000));
+app.listen(port);
+console.log("Rasparmony node has started on port " + port);

@@ -48,7 +48,7 @@ NOTE: Update `RASPARMONY_PATH` variable with the actual PATH where you locate Ra
 ### From Docker image
 
 ```
-docker run -d -p 3000:3000-e RASPARMONY_CONFIG=/rasparmony/config/config.json --device /dev/mem:/dev/mem -v /lib/modules:/lib/modules -v /rasparmony/config:config --cap-add=ALL --rm --privileged -it jdavisonc/rasparmony
+docker run --restart=always -d -p 3000:3000 -e RASPARMONY_CONFIG=/rasparmony/config/config.json --device /dev/mem:/dev/mem -v /lib/modules:/lib/modules -v /root/config:/rasparmony/config --cap-add=ALL --privileged -it jdavisonc/rasparmony
 ```
 
 Variables:

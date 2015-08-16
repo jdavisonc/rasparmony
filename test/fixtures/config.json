@@ -1,7 +1,8 @@
 {
   "general": 
   {
-    "defaultDelay": "300"
+    "defaultDelay": "300",
+    "customLircrc": "customLircrc.conf"
   },
   "remotes": [
     {
@@ -68,12 +69,22 @@
           "alias": "INFO"
         }
       ]
+    },
+    {
+      "name": "auxiliar",
+      "code": "888888",
+      "definition": "6710CDAP01B",
+      "brand": "samsung"
     }
   ],
   "macros": [
     {
       "name": "TV",
       "icon": "gamepad",
+      "trigger": {
+        "remote": "auxiliar",
+        "command": "POWER"
+      },
       "commands": [
         {
           "remote": "TV",
@@ -88,6 +99,10 @@
     {
       "name": "Nexus Player",
       "icon": "youtube-play",
+      "trigger": {
+        "remote": "auxiliar",
+        "command": "OPTION_1"
+      },
       "commands": [
         {
           "remote": "TV",
@@ -106,6 +121,10 @@
     {
       "name": "Cable",
       "icon": "code-fork",
+      "trigger": {
+        "remote": "auxiliar",
+        "command": "OPTION_2"
+      },
       "commands": [
         {
           "remote": "TV",

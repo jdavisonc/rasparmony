@@ -6,7 +6,7 @@
 
 var config = {
   dest: 'www',
-  cordova: true,
+  cordova: false,
   minify_images: true,
   
   vendor: {
@@ -20,15 +20,6 @@ var config = {
     fonts: [
       './bower_components/font-awesome/fonts/fontawesome-webfont.*'
     ]
-  },
-
-  weinre: {
-    httpPort:     8001,
-    boundHost:    'localhost',
-    verbose:      false,
-    debug:        false,
-    readTimeout:  5,
-    deathTimeout: 15
   }
 };
 
