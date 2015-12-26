@@ -32,7 +32,13 @@
     "streamqueue": "^0.1.1",
     "gulp-rename": "^1.2.0",
     "gulp-live-server": "^0.0.14",
-    "bower": "*"
+    "bower": "*",
+    "orchestrator": "*",
+    "gulp-util": "*",
+    "deprecated": "*",
+    "vinyl-fs": "*",
+    "gulp-bower": "*",
+    "del": "*"
   },
   "scripts": {
     "start": "node app.js"

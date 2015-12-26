@@ -51,7 +51,8 @@ var gulp           = require('gulp'),
     streamqueue    = require('streamqueue'),
     rename         = require('gulp-rename'),
     path           = require('path'),
-    gls            = require('gulp-live-server');
+    gls            = require('gulp-live-server'),
+    del            = require('del');
 
 
 /*================================================
@@ -67,15 +68,10 @@ gulp.on('error', function(e) {
 =            Clean dest folder            =
 =========================================*/
 
-gulp.task('clean', function (cb) {
-  return gulp.src([
-        path.join(config.dest, 'index.html'),
-        path.join(config.dest, 'images'),
-        path.join(config.dest, 'css'),
-        path.join(config.dest, 'js'),
-        path.join(config.dest, 'fonts')
-      ], { read: false })
-     .pipe(rimraf());
+gulp.task('clean', function () {
+  return del([
+    'www/**/*'
+  ]);
 });
 
 /*==========================================
@@ -121,16 +117,6 @@ gulp.task('images', function () {
 });
 
 
-/*==================================
-=            Copy fonts            =
-==================================*/
-
-gulp.task('fonts', function() {
-  return gulp.src(config.vendor.fonts)
-  .pipe(gulp.dest(path.join(config.dest, 'fonts')));
-});
-
-
 /*=================================================
 =            Copy html files to dest              =
 =================================================*/
@@ -154,7 +140,7 @@ gulp.task('html', function() {
 ======================================================================*/
 
 gulp.task('less', function () {
-  gulp.src(['./src/less/app.less', './src/less/responsive.less'])
+  gulp.src(['./src/less/app.less'])
     .pipe(less({
       paths: [ path.resolve(__dirname, 'src/less'), path.resolve(__dirname, 'bower_components') ]
     }))
@@ -225,12 +211,22 @@ gulp.task('weinre', function() {
 });
 
 
+/*==================================
+=            Copy fonts            =
+==================================*/
+
+gulp.task('fonts', function() {
+  return gulp.src(config.vendor.fonts)
+  .pipe(gulp.dest(path.join(config.dest, 'fonts')));
+});
+
+
 /*======================================
 =            Build Sequence            =
 ======================================*/
 
 gulp.task('build', function(done) {
-  var tasks = ['html', 'fonts', 'images', 'less', 'js'];
+  var tasks = ['html', 'images', 'less', 'js', 'fonts'];
   seq('clean', tasks, done);
 });
 

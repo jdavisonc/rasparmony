@@ -20,6 +20,7 @@ Rasparmony use:
 * Device and commands alias
 * Mobile WebUI to easy configure your devices
 * *Device States*: Holds the device state depending on the configuration. This enable the user to configure macros in a more real way instead of set how many time the command X should be send. Just set the expected state of the device in the macro, supports more than one state per device (see config.json).
+* [NEW] Start LIRC daemon with custom configuration (see config.json).
 
 ## Usage
 
@@ -66,12 +67,15 @@ More Images on http://imgur.com/a/yeiic#wqfFmBb
 
 ## Development
 
+On development or test mode, Rasparmony only start the web server without connection to LIRC.
+
 ```
+$ export PORT=3000 NODE_ENV="test"
 $ git clone https://github.com/jdavisonc/rasparmony.git
 $ cd rasparmony
+$ npm install
+$ bower install
 $ gulp
-
-# Server starts on port 3000
 ```
 
 
